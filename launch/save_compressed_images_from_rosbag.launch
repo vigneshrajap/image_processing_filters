@@ -1,0 +1,19 @@
+<launch>
+  <node pkg="rosbag" type="play" name="rosbag" required="true" args="-l /home/vr/camera_front_forward_0.bag"/>
+
+ <!-- Uncompress images -->   
+  <node pkg="image_transport" type="republish" name="decompress_node" args="compressed in:=/camera_front_forward/color/image_raw out:=/camera/image" />
+
+  <!--node name="image_saver" pkg="image_view" type="image_saver" respawn="false" output="screen">
+     <remap from="image" to="/camera/image"/>
+     <param name="save_all_image" value="true"/>
+     <param name="filename_format" value="%04i.%s"/>
+  </node-->
+
+  <!-- Extract images -->
+  <node name="extract" pkg="image_view" type="extract_images" respawn="false" required="true" output="screen" cwd="ROS_HOME">
+    <remap from="image" to="/camera/image"/>
+  </node>
+
+
+</launch>
