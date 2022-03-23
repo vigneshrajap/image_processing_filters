@@ -29,16 +29,35 @@ def image_callback(msg):
         print(e)
     else:
         # Save your OpenCV2 image as a jpeg 
-        time = msg.header.stamp
-        cv2.imwrite(''+str(time)+'.jpeg', cv2_img)
+        seq = msg.header.seq        
+        cv2.imwrite('camera_rear_left_'+str(seq)+'.jpeg', cv2_img)
+        rospy.sleep(1)
+
+def right_image_callback(msg):
+    print("Received an image!")
+    try:
+        # Convert your ROS Image message to OpenCV2
+        cv2_img = bridge.imgmsg_to_cv2(msg, "bgr8")
+    except CvBridgeError, e:
+        print(e)
+    else:
+        # Save your OpenCV2 image as a jpeg 
+        seq = msg.header.seq        
+        cv2.imwrite('camera_rear_right_'+str(seq)+'.jpeg', cv2_img)
         rospy.sleep(1)
 
 def main():
     rospy.init_node('image_listener')
     # Define your image topic
-    image_topic = "/camera/rgb/image_raw"
+    image_topic = "/camera_rear_left/color/image_raw/output"
     # Set up your subscriber and define its callback
     rospy.Subscriber(image_topic, Image, image_callback)
+    
+    # Define your image topic
+    right_image_topic = "/camera_rear_right/color/image_raw/output"
+    # Set up your subscriber and define its callback
+    rospy.Subscriber(right_image_topic, Image, right_image_callback)
+ 
     # Spin until ctrl + c
     rospy.spin()
 

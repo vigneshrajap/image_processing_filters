@@ -1,19 +1,20 @@
 <launch>
-  <node pkg="rosbag" type="play" name="rosbag" required="true" args="-l /home/vr/camera_front_forward_0.bag"/>
+
+  <!-- Custom Path and Bag files-->>
+  <arg name="path" default="$(env HOME)/Dataset/" />
+  <arg name="file_1" default="WPK_1" />
+  <arg name="file_2" default="WPK_2" />
+
+ <!-- Play RosBag -->   
+ <node pkg="rosbag" type="play" name="rosbag" output="screen" args="--clock $(arg path)$(arg file_1).bag $(arg path)$(arg file_2).bag"/>
 
  <!-- Uncompress images -->   
-  <node pkg="image_transport" type="republish" name="decompress_node" args="compressed in:=/camera_front_forward/color/image_raw out:=/camera/image" />
-
-  <!--node name="image_saver" pkg="image_view" type="image_saver" respawn="false" output="screen">
-     <remap from="image" to="/camera/image"/>
-     <param name="save_all_image" value="true"/>
-     <param name="filename_format" value="%04i.%s"/>
-  </node-->
+  <node pkg="image_transport" type="republish" name="decompress_node" args="compressed in:=/camera_front_forward/color/image_raw out:=/camera/image_raw" />
 
   <!-- Extract images -->
-  <node name="extract" pkg="image_view" type="extract_images" respawn="false" required="true" output="screen" cwd="ROS_HOME">
-    <remap from="image" to="/camera/image"/>
+  <node name="extract" pkg="image_view" type="extract_images" respawn="false" required="true" cwd="ROS_HOME">
+    <remap from="image" to="/camera/image_raw"/>
+    <param name="filename_format" value="WPK_%06d.png"/>
   </node>
-
 
 </launch>
