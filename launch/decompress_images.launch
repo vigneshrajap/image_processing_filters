@@ -2,7 +2,7 @@
 
   <!-- Custom Path and Bag files-->>
   <arg name="path" default="$(env HOME)/kazo_bags/" />
-  <arg name="file_1" default="wheelchair_gabriel" />
+  <arg name="file_1" default="wheelchair_katrina" />
   <!--arg name="file_2" default="camera_front_forward_2" /-->
 
  <!-- Play RosBag -->   
